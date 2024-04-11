@@ -75,7 +75,9 @@ export const Dashboard: React.FC = () => {
             )}
           </div>
         </div>
-        <ProcessDisplay processes={processes} />
+        {
+            processes.length > 0 ? <ProcessDisplay processes={processes} /> : <div></div>
+        }
       </div>
     </div>
   );
