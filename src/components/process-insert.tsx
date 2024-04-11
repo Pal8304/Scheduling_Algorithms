@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,7 +8,28 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-export const ProcessInsert = () => {
+interface Process {
+  id: number;
+  arrivalTime: number;
+  burstTime: number;
+}
+interface ProcessInsertProps {
+  addProcess: (process: Process) => void;
+}
+
+export const ProcessInsert: React.FC<ProcessInsertProps> = ({ addProcess }) => {
+  const [processId, setProcessId] = useState<number>(0);
+  const [arrivalTime, setArrivalTime] = useState<number>(0);
+  const [burstTime, setBurstTime] = useState<number>(0);
+
+  const handleAddProcess = () => {
+    addProcess({
+      id: processId,
+      arrivalTime: arrivalTime,
+      burstTime: burstTime,
+    });
+  };
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -24,7 +46,7 @@ export const ProcessInsert = () => {
             </p>
           </div>
         </div>
-        <div className="grid gap-2">
+        <div className="grid gap-2 mt-4">
           <div className="grid grid-cols-3 items-center gap-4">
             <Label htmlFor="process-id">Process ID</Label>
             <Input
@@ -32,6 +54,8 @@ export const ProcessInsert = () => {
               type="number"
               placeholder="Enter Process ID"
               className="col-span-2 h-8"
+              value={processId}
+              onChange={(e) => setProcessId(parseInt(e.target.value))}
             />
           </div>
           <div className="grid grid-cols-3 items-center gap-4">
@@ -41,6 +65,8 @@ export const ProcessInsert = () => {
               type="number"
               placeholder="Enter Arrival Time"
               className="col-span-2 h-8"
+              value={arrivalTime}
+              onChange={(e) => {setArrivalTime(parseInt(e.target.value))}}
             />
           </div>
           <div className="grid grid-cols-3 items-center gap-4">
@@ -50,9 +76,18 @@ export const ProcessInsert = () => {
               type="number"
               placeholder="Enter Burst Time"
               className="col-span-2 h-8"
+              value={burstTime}
+              onChange={(e) => setBurstTime(parseInt(e.target.value))}
             />
           </div>
-          <Button variant={"ghost"}>Add Process</Button>
+          <Button
+            variant={"ghost"}
+            onClick={() => {
+              handleAddProcess();
+            }}
+          >
+            Add Process
+          </Button>
         </div>
       </PopoverContent>
     </Popover>
