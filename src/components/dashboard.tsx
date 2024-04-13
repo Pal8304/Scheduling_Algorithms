@@ -9,7 +9,6 @@ import {
 
 import { ProcessInsert } from "@/components/process-insert";
 import { ProcessDisplay } from "@/components/process-display";
-import { SchedulingGanttChart } from "./scheduling-gantt-chart";
 interface Process {
   id: number;
   arrivalTime: number;
@@ -78,8 +77,7 @@ export const Dashboard: React.FC = () => {
         {
             processes.length > 0 ? 
             <div>
-                <ProcessDisplay processes={processes} /> 
-                <SchedulingGanttChart processes={processes} />
+                <ProcessDisplay processes={processes} schedulingAlgorithm={schedulingAlgorithm} />
             </div>
             : <div></div>
         }

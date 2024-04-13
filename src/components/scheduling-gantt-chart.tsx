@@ -1,49 +1,60 @@
 import React from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
+import { FirstComeFirstServe } from "./algorithms/first-come-first-serve";
+import { ShortestJobFirstPreemptive } from "./algorithms/shortest-job-first-premptive";
+import { ShortestJobFirstNonPreemptive } from "./algorithms/shortest-job-first-non-premptive";
+
 interface Process {
-  id: number;
+  id: string;
   arrivalTime: number;
   burstTime: number;
 }
 
 interface SchedulingGanttChartProps {
   processes: Process[];
+  schedulingAlgorithm: string;
 }
 
 export const SchedulingGanttChart: React.FC<SchedulingGanttChartProps> = ({
-  processes,
+  processes, schedulingAlgorithm
 }) => {
-    const [parent,enableAnimations] = useAutoAnimate()
-  function FirstComeFirstServe(Processes: Process[]) {
-    processes.sort((a, b) => a.arrivalTime - b.arrivalTime);
-    const ganttChart = [];
-    let currentTime = 0;
-    for (let i = 0; i < processes.length; i++) {
-      ganttChart.push({
-        process: processes[i].id,
-        start: Math.max(currentTime, processes[i].arrivalTime),
-        end:
-          Math.max(currentTime, processes[i].arrivalTime) +
-          processes[i].burstTime,
-      });
-      currentTime = ganttChart[ganttChart.length - 1].end;
+  const [parent, enableAnimations] = useAutoAnimate();
+  let scheduledProcesses;
+    switch (schedulingAlgorithm) {
+        case "fcfs":
+        scheduledProcesses = FirstComeFirstServe(processes);
+        break;
+        case "sjf-p":
+        scheduledProcesses = ShortestJobFirstPreemptive(processes);
+        break;
+        case "sjf-np":
+        scheduledProcesses = ShortestJobFirstNonPreemptive(processes);
+        break;
+        default:
+        throw new Error("Invalid Scheduling Algorithm" + schedulingAlgorithm);
     }
-    return ganttChart;
-  }
   return (
     <div>
       <h1 className="text-2xl font-bold text-center mt-4">Gantt Chart</h1>
       <div className="flex justify-center mt-4">
-        <div ref={parent} className="flex gap-2">
-          {FirstComeFirstServe(processes).map((process, index) => (
-            <div key={process.process} className="flex flex-col">
-              <div className="bg-sky-400 flex items-center justify-center w-20 h-10 rounded-md">
-                {process.process}
-              </div>
-              <div className="flex justify-between w-[120%] -ml-2">
+        <div ref={parent} className="flex ">
+          {scheduledProcesses.map((process, index) => (
+            <div
+              key={index}
+              className={`text-center w-20 h-15 flex flex-col items-center justify-center rounded-md ${
+                process.process === "Idle"
+                  ? "bg-inherit text-white border-2 border-white"
+                  : "bg-white text-black"
+              }`}
+              style={{
+                width: `${2 * (process.end - process.start)}rem`,
+              }}
+            >
+              {process.process}
+              <div className="flex flex-row justify-between text-xs w-full px-1 opacity-0 hover:opacity-100">
                 <div>{process.start}</div>
-                <div>{index === processes.length - 1 && process.end}</div>
+                <div>{process.end}</div>
               </div>
             </div>
           ))}

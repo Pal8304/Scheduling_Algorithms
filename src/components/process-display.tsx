@@ -10,6 +10,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import { useState } from "react";
+import { SchedulingGanttChart } from "./scheduling-gantt-chart";
+
 interface Process {
   id: number;
   arrivalTime: number;
@@ -18,11 +21,14 @@ interface Process {
 
 interface ProcessDisplayProps {
   processes: Process[];
+  schedulingAlgorithm: string;
 }
 
 export const ProcessDisplay: React.FC<ProcessDisplayProps> = ({
   processes,
+  schedulingAlgorithm,
 }) => {
+  const [simulationBegin, setSimulationBegin] = useState<boolean>(false);
   return (
     <div className="flex flex-col items-center justify-center">
       <h1 className="text-2xl font-bold text-center mt-4">Processes</h1>
@@ -53,9 +59,14 @@ export const ProcessDisplay: React.FC<ProcessDisplayProps> = ({
           </TableBody>
         </Table>
       </div>
-      <Button className="w-50 mt-4" variant={"default"}>
+      <Button className="w-50 mt-4" variant={"default"}
+        onClick={() => setSimulationBegin(true)}
+      >
         Start Simulation
       </Button>
+      {
+        simulationBegin && <SchedulingGanttChart processes={processes} schedulingAlgorithm={schedulingAlgorithm} />
+      }
     </div>
   );
 };
