@@ -4,40 +4,75 @@ interface Process {
   burstTime: number;
 }
 
-
-export function ShortestJobFirstPreemptive(Processes : Process[]){
-    const ganttChart = [];
-    let currentTime = 0;
-    Processes.sort((a, b) => a.arrivalTime - b.arrivalTime);
-    const processQueue = [];
-    let processIndex = 0;
-    let completedProcesses = 0;
-    while(completedProcesses < Processes.length){
-        while(processIndex < Processes.length && currentTime >= Processes[processIndex].arrivalTime){
-            processQueue.push(Processes[processIndex]);
-            processIndex++;
-        }
-        if(processQueue.length === 0){
+export function ShortestJobFirstPreemptive(Processes: Process[]) {
+  const ganttChart = [];
+  let currentTime = 0;
+  let processIndex = 0;
+  let completedProcesses = 0;
+  const processQueue = [];
+  console.log("Processes ", Processes);
+  Processes.sort((a, b) => a.arrivalTime - b.arrivalTime);
+  console.log("Processes after ", Processes);
+  const ProcessesCopy = Processes.map(process => ({...process}));
+  console.log("ProcessesCopy ", ProcessesCopy);
+  for(let i = 0; i < ProcessesCopy.length;i++){
+    console.log("ProcessesCopy ", ProcessesCopy[i]);
+  }
+  while(completedProcesses < ProcessesCopy.length){
+    while(processIndex < ProcessesCopy.length && currentTime >= ProcessesCopy[processIndex].arrivalTime && completedProcesses < ProcessesCopy.length){
+      processQueue.push(Processes[processIndex]);
+      processIndex++;
+    }
+    if(completedProcesses === ProcessesCopy.length){
+        break;
+    }
+    if(processQueue.length === 0){
+        if(ganttChart.length === 0){
             ganttChart.push({
                 process: "Idle",
                 start: currentTime,
-                end: Processes[processIndex].arrivalTime
+                end: currentTime + 1
             });
-            currentTime = Processes[processIndex].arrivalTime;
         }
-        while(processIndex < Processes.length && currentTime >= Processes[processIndex].arrivalTime){
-            processQueue.push(Processes[processIndex]);
-            processIndex++;
+        else{
+            if(ganttChart[ganttChart.length - 1].process !== "Idle"){
+                ganttChart.push({
+                    process: "Idle",
+                    start: currentTime,
+                    end: currentTime + 1
+                });
+            }
+            else{
+                ganttChart[ganttChart.length - 1].end++;
+            }
         }
+    }
+    else{
+        //console.log("processQueue ", processQueue);
         processQueue.sort((a, b) => a.burstTime - b.burstTime);
         const process = processQueue.shift();
-        ganttChart.push({
-            process: process.id,
-            start: currentTime,
-            end: currentTime + process.burstTime,
-        });
-        currentTime += process.burstTime;
-        completedProcesses++;
+        if(ganttChart.length > 0 && ganttChart[ganttChart.length - 1].process === process.id){
+            ganttChart[ganttChart.length - 1].end++;
+        }
+        else{
+            ganttChart.push({
+                process: process.id,
+                start: currentTime,
+                end: currentTime + 1
+            });
+        }
+        process.burstTime--;
+        if(process.burstTime <= 0){
+            completedProcesses++;
+            if(completedProcesses === ProcessesCopy.length){
+                break;
+            }
+        }
+        else{
+            processQueue.push(process);
+        }
     }
+    currentTime++;
+  }
     return ganttChart;
 }

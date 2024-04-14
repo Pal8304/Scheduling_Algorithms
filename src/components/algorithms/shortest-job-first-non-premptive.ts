@@ -7,36 +7,35 @@ interface Process {
 export function ShortestJobFirstNonPreemptive(Processes: Process[]) {
     const ganttChart = [];
     let currentTime = 0;
+    console.log("Processes ", Processes);
     Processes.sort((a, b) => a.arrivalTime - b.arrivalTime);
     const processQueue = [];
     let processIndex = 0;
     let completedProcesses = 0;
     while(completedProcesses < Processes.length){
-        if(processQueue.length === 0){
+        while(processIndex < Processes.length && currentTime >= Processes[processIndex].arrivalTime){
             processQueue.push(Processes[processIndex]);
             processIndex++;
         }
-        while(processIndex < Processes.length && currentTime < Processes[processIndex].arrivalTime){
-            processQueue.push(Processes[processIndex]);
-            processIndex++;
-        }
-        processQueue.sort((a, b) => a.burstTime - b.burstTime);
-        const process = processQueue.shift();
-        if(currentTime < process.arrivalTime){
+        if(processQueue.length === 0 && completedProcesses < Processes.length){
             ganttChart.push({
                 process: "Idle",
                 start: currentTime,
-                end: process.arrivalTime
+                end: Processes[processIndex].arrivalTime
             });
-            currentTime = process.arrivalTime;
+            currentTime = Processes[processIndex].arrivalTime;
         }
-        ganttChart.push({
-            process: process.id,
-            start: currentTime,
-            end: currentTime + process.burstTime
-        });
-        currentTime += process.burstTime;
-        completedProcesses++;
+        else{
+            processQueue.sort((a, b) => a.burstTime - b.burstTime);
+            const process = processQueue.shift();
+            ganttChart.push({
+                process: process.id,
+                start: currentTime,
+                end: currentTime + process.burstTime
+            });
+            currentTime += process.burstTime;
+            completedProcesses++;
+        }
     }
     return ganttChart;
 }
