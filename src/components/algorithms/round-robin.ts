@@ -3,45 +3,68 @@ interface Process {
     arrivalTime: number;
     burstTime: number;
 }
-// Round Robin Scheduling Algorithm need to be changed 
+
 export function RoundRobin(Processes: Process[], quantum: number) {
     const ganttChart = [];
     let currentTime = 0;
     let processIndex = 0;
     let completedProcesses = 0;
-    let processQueue = [];
-    let timeQuantum = quantum;
-    while (completedProcesses < Processes.length) {
-        if (processQueue.length === 0) {
-            processQueue.push(Processes[processIndex]);
+    Processes.sort((a, b) => a.arrivalTime - b.arrivalTime);
+    const ProcessesCopy = Processes.map(process => ({...process}));
+    const processQueue = [];
+    console.log("Processes ", Processes);
+    while(completedProcesses < Processes.length){
+        while(processIndex < Processes.length && currentTime >= Processes[processIndex].arrivalTime){
+            processQueue.push(ProcessesCopy[processIndex]);
             processIndex++;
         }
-        while (processIndex < Processes.length && currentTime >= Processes[processIndex].arrivalTime) {
-            processQueue.push(Processes[processIndex]);
-            processIndex++;
+        if(processQueue.length === 0 && completedProcesses < Processes.length){
+            if(ganttChart.length > 0 && ganttChart[ganttChart.length - 1].process === "Idle"){
+                ganttChart[ganttChart.length - 1].end++;
+            }
+            else{
+                ganttChart.push({
+                    process: "Idle",
+                    start: currentTime,
+                    end: currentTime + 1
+                });
+            }
+            currentTime++;
         }
-        const process = processQueue.shift();
-        if (currentTime < process.arrivalTime) {
-            ganttChart.push({
-                process: "Idle",
-                start: currentTime,
-                end: process.arrivalTime
-            });
-            currentTime = process.arrivalTime;
+        else{
+            const process = processQueue.shift();
+            if(process.burstTime > quantum){
+                if(ganttChart.length > 0 && ganttChart[ganttChart.length - 1].process === process.id){
+                    ganttChart[ganttChart.length - 1].end += quantum;
+                }
+                else{
+                    ganttChart.push({
+                        process: process.id,
+                        start: currentTime,
+                        end: currentTime + quantum
+                    });
+                }
+                process.burstTime -= quantum;
+                currentTime += quantum;
+                processQueue.push(process);
+            }
+            else{
+                if(ganttChart.length > 0 && ganttChart[ganttChart.length - 1].process === process.id){
+                    ganttChart[ganttChart.length - 1].end += process.burstTime;
+                }
+                else{
+                    ganttChart.push({
+                        process: process.id,
+                        start: currentTime,
+                        end: currentTime + process.burstTime
+                    });
+                }
+                currentTime += process.burstTime;
+                completedProcesses++;
+            }
         }
-        ganttChart.push({
-            process: process.id,
-            start: currentTime,
-            end: currentTime + Math.min(timeQuantum, process.burstTime)
-        });
-        currentTime += Math.min(timeQuantum, process.burstTime);
-        process.burstTime -= timeQuantum;
-        if (process.burstTime <= 0) {
-            completedProcesses++;
-        }
-        else {
-            processQueue.push(process);
-        }
+        console.log("processQueue ", processQueue);
+        console.log("currentTime ", currentTime);
     }
     return ganttChart;
 }

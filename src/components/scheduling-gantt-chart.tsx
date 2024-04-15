@@ -4,7 +4,7 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { FirstComeFirstServe } from "./algorithms/first-come-first-serve";
 import { ShortestJobFirstPreemptive } from "./algorithms/shortest-job-first-premptive";
 import { ShortestJobFirstNonPreemptive } from "./algorithms/shortest-job-first-non-premptive";
-
+import { RoundRobin } from "./algorithms/round-robin";
 interface Process {
   id: string;
   arrivalTime: number;
@@ -30,6 +30,9 @@ export const SchedulingGanttChart: React.FC<SchedulingGanttChartProps> = ({
         break;
         case "sjf-np":
         scheduledProcesses = ShortestJobFirstNonPreemptive(processes);
+        break;
+        case "round-robin":
+        scheduledProcesses = RoundRobin(processes, 2);
         break;
         default:
         throw new Error("Invalid Scheduling Algorithm" + schedulingAlgorithm);

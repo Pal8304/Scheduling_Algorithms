@@ -20,7 +20,7 @@ export function ShortestJobFirstPreemptive(Processes: Process[]) {
   }
   while(completedProcesses < ProcessesCopy.length){
     while(processIndex < ProcessesCopy.length && currentTime >= ProcessesCopy[processIndex].arrivalTime && completedProcesses < ProcessesCopy.length){
-      processQueue.push(Processes[processIndex]);
+      processQueue.push(ProcessesCopy[processIndex]);
       processIndex++;
     }
     if(completedProcesses === ProcessesCopy.length){
