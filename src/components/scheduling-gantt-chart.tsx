@@ -1,6 +1,8 @@
 import React from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
+import { ProcessExecutionTable } from "./process-execution-table";
+
 import { FirstComeFirstServe } from "./algorithms/first-come-first-serve";
 import { ShortestJobFirstPreemptive } from "./algorithms/shortest-job-first-premptive";
 import { ShortestJobFirstNonPreemptive } from "./algorithms/shortest-job-first-non-premptive";
@@ -62,6 +64,9 @@ export const SchedulingGanttChart: React.FC<SchedulingGanttChartProps> = ({
             </div>
           ))}
         </div>
+      </div>
+      <div className="mt-4">
+        <ProcessExecutionTable ganttChart={scheduledProcesses} />
       </div>
     </div>
   );

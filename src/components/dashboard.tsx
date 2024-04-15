@@ -58,7 +58,7 @@ export const Dashboard: React.FC = () => {
           </div>
           <div>
             {schedulingAlgorithm === "fcfs" ? (
-              <ProcessInsert addProcess={addProcess} />
+              <ProcessInsert addProcess={addProcess}/>
             ) : schedulingAlgorithm === "sjf-p" ? (
               <ProcessInsert addProcess={addProcess} />
             ) : schedulingAlgorithm === "sjf-np" ? (
