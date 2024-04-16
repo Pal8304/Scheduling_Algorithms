@@ -19,26 +19,28 @@ interface SchedulingGanttChartProps {
 }
 
 export const SchedulingGanttChart: React.FC<SchedulingGanttChartProps> = ({
-  processes, schedulingAlgorithm
+  processes,
+  schedulingAlgorithm,
 }) => {
   const [parent, enableAnimations] = useAutoAnimate();
+  const [hoveredonProcess, setHoveredonProcess] = React.useState<string>("");
   let scheduledProcesses;
-    switch (schedulingAlgorithm) {
-        case "fcfs":
-        scheduledProcesses = FirstComeFirstServe(processes);
-        break;
-        case "sjf-p":
-        scheduledProcesses = ShortestJobFirstPreemptive(processes);
-        break;
-        case "sjf-np":
-        scheduledProcesses = ShortestJobFirstNonPreemptive(processes);
-        break;
-        case "round-robin":
-        scheduledProcesses = RoundRobin(processes, 2);
-        break;
-        default:
-        throw new Error("Invalid Scheduling Algorithm" + schedulingAlgorithm);
-    }
+  switch (schedulingAlgorithm) {
+    case "fcfs":
+      scheduledProcesses = FirstComeFirstServe(processes);
+      break;
+    case "sjf-p":
+      scheduledProcesses = ShortestJobFirstPreemptive(processes);
+      break;
+    case "sjf-np":
+      scheduledProcesses = ShortestJobFirstNonPreemptive(processes);
+      break;
+    case "round-robin":
+      scheduledProcesses = RoundRobin(processes, 2);
+      break;
+    default:
+      throw new Error("Invalid Scheduling Algorithm" + schedulingAlgorithm);
+  }
   return (
     <div>
       <h1 className="text-2xl font-bold text-center mt-4">Gantt Chart</h1>
@@ -47,7 +49,7 @@ export const SchedulingGanttChart: React.FC<SchedulingGanttChartProps> = ({
           {scheduledProcesses.map((process, index) => (
             <div
               key={index}
-              className={`text-center w-20 h-15 flex flex-col items-center justify-center rounded-md ${
+              className={`text-center w-20 h-16 flex flex-col items-center justify-center rounded-md ${
                 process.process === "Idle"
                   ? "bg-inherit text-white border-2 border-white"
                   : "bg-white text-black"
@@ -55,12 +57,16 @@ export const SchedulingGanttChart: React.FC<SchedulingGanttChartProps> = ({
               style={{
                 width: `${2 * (process.end - process.start)}rem`,
               }}
+              onMouseEnter={() => setHoveredonProcess(process.process)}
+              onMouseLeave={() => setHoveredonProcess("")}
             >
               {process.process}
-              <div className="flex flex-row justify-between text-xs w-full px-1 opacity-0 hover:opacity-100">
-                <div>{process.start}</div>
-                <div>{process.end}</div>
-              </div>
+              {hoveredonProcess === process.process && (
+                <div className="flex flex-row justify-between text-xs w-full px-1">
+                  <div>{process.start}</div>
+                  <div>{process.end}</div>
+                </div>
+              )}
             </div>
           ))}
         </div>
