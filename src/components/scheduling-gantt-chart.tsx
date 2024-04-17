@@ -22,6 +22,7 @@ export const SchedulingGanttChart: React.FC<SchedulingGanttChartProps> = ({
   schedulingAlgorithm,
 }) => {
   // const [parent, enableAnimations] = useAutoAnimate();
+  console.log("Processes in scheduling-gant-chart.tsx", processes);
   const [hoveredonProcess, setHoveredonProcess] = React.useState<string>("");
   let scheduledProcesses;
   switch (schedulingAlgorithm) {
@@ -71,7 +72,10 @@ export const SchedulingGanttChart: React.FC<SchedulingGanttChartProps> = ({
         </div>
       </div>
       <div className="mt-4">
-        <ProcessExecutionTable ganttChart={scheduledProcesses} />
+        <ProcessExecutionTable
+          ganttChart={scheduledProcesses}
+          originalProcesses={processes}
+        />
       </div>
     </div>
   );

@@ -9,10 +9,12 @@ interface Process{
 
 interface ExecutionTableProps {
     ganttChart?: { process: string, start: number, end: number }[];
+    originalProcesses?: { id: string, arrivalTime: number, burstTime: number }[];
 }
 
-export function ExecutionTable({ ganttChart = [] }: ExecutionTableProps) {
+export function ExecutionTable({ ganttChart = [], originalProcesses= [] }: ExecutionTableProps) {
     console.log("Gantt Chart: ", ganttChart);
+    console.log("Original Processes: ", originalProcesses);
     const processes:Process[] = [];
     let currentTime = 0;
     for (let i = 0; i < ganttChart.length; i++) {
@@ -22,8 +24,8 @@ export function ExecutionTable({ ganttChart = [] }: ExecutionTableProps) {
             if (processIndex === -1) {
                 processes.push({
                     id: process.process,
-                    arrivalTime: currentTime,
-                    burstTime: process.end - process.start,
+                    arrivalTime: originalProcesses.find((p) => p.id === process.process)?.arrivalTime || 0,
+                    burstTime: originalProcesses.find((p) => p.id === process.process)?.burstTime || 0,
                     completionTime: process.end,
                     turnaroundTime: process.end - currentTime,
                     waitingTime: currentTime - process.start
