@@ -14,3 +14,7 @@ Algorithms implemented:
 - [ ] Priority Scheduling Preemptive
 - [ ] Priority Scheduling Non-Preemptive
 
+Stuff to do:
+
+- [ ] Implement Priority Scheduling Algos
+- [ ] Add animations to the gantt chart 
