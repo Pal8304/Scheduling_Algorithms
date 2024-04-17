@@ -32,7 +32,10 @@ export function RoundRobin(Processes: Process[], quantum: number) {
             currentTime++;
         }
         else{
-            const process = processQueue.shift();
+            const process: Process | undefined = processQueue.shift();
+            if(!process){
+                break;
+            }
             if(process.burstTime > quantum){
                 if(ganttChart.length > 0 && ganttChart[ganttChart.length - 1].process === process.id){
                     ganttChart[ganttChart.length - 1].end += quantum;

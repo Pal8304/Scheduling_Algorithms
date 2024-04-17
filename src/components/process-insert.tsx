@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/popover";
 
 interface Process {
-  id: number;
+  id: string;
   arrivalTime: number;
   burstTime: number;
 }
@@ -18,7 +18,7 @@ interface ProcessInsertProps {
 }
 
 export const ProcessInsert: React.FC<ProcessInsertProps> = ({ addProcess }) => {
-  const [processId, setProcessId] = useState<number>(0);
+  const [processId, setProcessId] = useState<string>("0");
   const [arrivalTime, setArrivalTime] = useState<number>(0);
   const [burstTime, setBurstTime] = useState<number>(0);
 
@@ -55,7 +55,7 @@ export const ProcessInsert: React.FC<ProcessInsertProps> = ({ addProcess }) => {
               placeholder="Enter Process ID"
               className="col-span-2 h-8"
               value={processId}
-              onChange={(e) => setProcessId(parseInt(e.target.value))}
+              onChange={(e) => setProcessId(e.target.value)}
             />
           </div>
           <div className="grid grid-cols-3 items-center gap-4">

@@ -49,8 +49,11 @@ export function ShortestJobFirstPreemptive(Processes: Process[]) {
     }
     else{
         //console.log("processQueue ", processQueue);
-        processQueue.sort((a, b) => a.burstTime - b.burstTime);
-        const process = processQueue.shift();
+        processQueue.sort((a : Process, b : Process) => a.burstTime - b.burstTime);
+        const process: Process | undefined = processQueue.shift();
+        if(process === undefined){
+            break;
+        }
         if(ganttChart.length > 0 && ganttChart[ganttChart.length - 1].process === process.id){
             ganttChart[ganttChart.length - 1].end++;
         }

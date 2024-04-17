@@ -28,6 +28,9 @@ export function ShortestJobFirstNonPreemptive(Processes: Process[]) {
         else{
             processQueue.sort((a, b) => a.burstTime - b.burstTime);
             const process = processQueue.shift();
+            if(process === undefined){
+                break;
+            }
             ganttChart.push({
                 process: process.id,
                 start: currentTime,

@@ -6,5 +6,5 @@ interface Process {
 }
 
 export function PriorityScheduleAlgorithmPreemptive(Processes : Process[]){
-
+    return Processes;
 }

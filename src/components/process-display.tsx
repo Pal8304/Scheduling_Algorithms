@@ -14,7 +14,7 @@ import { useState } from "react";
 import { SchedulingGanttChart } from "./scheduling-gantt-chart";
 
 interface Process {
-  id: number;
+  id: string;
   arrivalTime: number;
   burstTime: number;
 }

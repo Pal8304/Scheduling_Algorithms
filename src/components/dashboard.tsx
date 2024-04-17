@@ -10,7 +10,7 @@ import {
 import { ProcessInsert } from "@/components/process-insert";
 import { ProcessDisplay } from "@/components/process-display";
 interface Process {
-  id: number;
+  id: string;
   arrivalTime: number;
   burstTime: number;
 }

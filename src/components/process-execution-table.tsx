@@ -12,7 +12,7 @@ import {
 import { ExecutionTable } from "./algorithms/execution-table";
 
 interface ProcessExecutionTableProps {
-    ganttChart: any[];
+    ganttChart: { process: string, start: number, end: number }[];
 }
 
 export const ProcessExecutionTable : React.FC<ProcessExecutionTableProps> = ({ganttChart}) => {
