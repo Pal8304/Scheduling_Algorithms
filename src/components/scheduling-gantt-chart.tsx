@@ -1,5 +1,4 @@
 import React from "react";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 import { ProcessExecutionTable } from "./process-execution-table";
 
@@ -22,7 +21,7 @@ export const SchedulingGanttChart: React.FC<SchedulingGanttChartProps> = ({
   processes,
   schedulingAlgorithm,
 }) => {
-  const [parent, enableAnimations] = useAutoAnimate();
+  // const [parent, enableAnimations] = useAutoAnimate();
   const [hoveredonProcess, setHoveredonProcess] = React.useState<string>("");
   let scheduledProcesses;
   switch (schedulingAlgorithm) {
@@ -45,7 +44,7 @@ export const SchedulingGanttChart: React.FC<SchedulingGanttChartProps> = ({
     <div>
       <h1 className="text-2xl font-bold text-center mt-4">Gantt Chart</h1>
       <div className="flex justify-center mt-4">
-        <div ref={parent} className="flex ">
+        <div className="flex ">
           {scheduledProcesses.map((process, index) => (
             <div
               key={index}
